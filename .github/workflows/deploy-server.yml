@@ -1,4 +1,4 @@
-name: Deploy to Render
+name: Deploy Server to Render
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,16 +18,20 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd server
+          npm install
 
-      - name: Build application
-        run: npm run build
+      - name: Build server (if needed)
+        run: |
+          cd server
+          npm run build
+
+      - name: Deploy to Render
+        run: |
+          curl -X POST https://api.render.com/v1/services/my-github-pipeline-BACKEND/deploys \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
+
 
   #    - name: Deploy to Render
   #      run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-      
-      - name: Trigger Render Deployment
-        run: |
-          curl -X POST "https://api.render.com/v1/services/my-github-pipeline/deploys" \
-          -H "Accept: application/json" \
-          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
