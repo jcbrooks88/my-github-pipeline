@@ -24,5 +24,11 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Deploy to Render
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+  #    - name: Deploy to Render
+  #      run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      
+      - name: Trigger Render Deployment
+        run: |
+          curl -X POST "https://api.render.com/v1/services/my-github-pipeline/deploys" \
+          -H "Accept: application/json" \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
