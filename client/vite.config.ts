@@ -7,12 +7,12 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
-    proxy: {
+    proxy: process.env.NODE_ENV === 'development' ? {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3001',  // Backend URL in development
         changeOrigin: true,
         secure: false,
       },
-    },
+    } : {},
   },
 });
