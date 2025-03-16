@@ -1,18 +1,19 @@
 import type { Question } from '../models/Question.js';
 
-// Get the base API URL from environment variables (using import.meta.env for Vite)
-const API_URL = import.meta.env.VITE_API_URL || '/api'; // Use VITE_API_URL instead of process.env.REACT_APP_API_URL
+const API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, '') || 'https://my-github-pipeline.onrender.com/api';
 
 export const getQuestions = async (): Promise<Question[]> => {
   try {
-    const response = await fetch(`${API_URL}/questions/random`); // Use the dynamic URL
+    const response = await fetch(`${API_URL}/questions/random`, {
+      headers: { 'Content-Type': 'application/json' },
+    });
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
-    const data: Question[] = await response.json();
-    return data;
+    return await response.json();
   } catch (error) {
     console.error('Failed to fetch questions:', error);
     throw error;
   }
 };
+
