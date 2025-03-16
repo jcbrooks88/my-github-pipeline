@@ -2,8 +2,12 @@ import { useState, } from 'react';
 import type { Question } from '../models/Question.js';
 import { getQuestions } from '../services/questionApi.js';
 
-const Quiz = () => {
-  const [questions, setQuestions] = useState<Question[]>([]);
+type QuizProps = {
+  testQuestions?: Question[]; // Allows injecting test questions
+};
+
+const Quiz = ({ testQuestions }: QuizProps) => {
+  const [questions, setQuestions] = useState<Question[]>(testQuestions || []);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
